@@ -157,13 +157,82 @@
     });
   }
 
-  // ---------- Reveal on scroll ----------
-  if ("IntersectionObserver" in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
-    }, { rootMargin: "0px 0px -8% 0px" });
-    document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+  // ---------- Motion ----------
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var canObserve = "IntersectionObserver" in window;
+
+  // Header shrinks once you scroll past the top
+  if (header && canObserve) {
+    var sentinel = document.createElement("div");
+    sentinel.style.cssText = "position:absolute;top:0;left:0;width:1px;height:90px;pointer-events:none";
+    body.prepend(sentinel);
+    new IntersectionObserver(function (e) { header.classList.toggle("scrolled", !e[0].isIntersecting); }).observe(sentinel);
+  }
+
+  // "Scroll" cue on the home hero
+  var hero = document.querySelector(".hero");
+  if (hero) hero.insertAdjacentHTML("beforeend", '<div class="scroll-cue" aria-hidden="true"></div>');
+
+  // Marker highlight behind section headings
+  document.querySelectorAll(".section-head h2, .split h2").forEach(function (h) {
+    h.innerHTML = '<span class="mark">' + h.innerHTML + "</span>";
+  });
+
+  // Numbers in the quick facts count up
+  document.querySelectorAll(".fact strong").forEach(function (s) {
+    var m = s.textContent.trim().match(/^(\D*)(\d+)(\D*)$/);
+    if (m && +m[2] > 0) { s.dataset.count = m[2]; s.dataset.pre = m[1]; s.dataset.post = m[3]; }
+  });
+  function countUp(s) {
+    var end = +s.dataset.count, t0 = null;
+    function step(t) {
+      if (!t0) t0 = t;
+      var p = Math.min((t - t0) / 1200, 1), eased = 1 - Math.pow(1 - p, 3);
+      s.textContent = s.dataset.pre + Math.round(end * eased) + s.dataset.post;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // Everything below fades/slides in as it scrolls into view
+  var AUTO = ".section-head, .gallery a, .card, .bench, .event, .facts, .framed, .map, .ig-strip, .week, .wod-board, details, .cert, .stat, .contact-list li, .cta-band h2, .cta-band .btn, .photo-frame, .profile-block, .profile h1, .profile .role, .crumbs, .footer-grid > div";
+  document.querySelectorAll(AUTO).forEach(function (el) {
+    if (el.closest(".hero, .page-hero, .lightbox")) return;
+    if (el.parentElement && el.parentElement.closest(".reveal")) return;
+    el.classList.add("reveal");
+    if (el.matches(".gallery a")) el.classList.add("zoom");
+  });
+  document.querySelectorAll(".split").forEach(function (s) {
+    var kids = s.children;
+    if (kids[0]) kids[0].classList.add("reveal", "from-left");
+    if (kids[1]) kids[1].classList.add("reveal", "from-right");
+  });
+
+  function revealEl(el, delay) {
+    setTimeout(function () {
+      el.classList.add("in");
+      el.querySelectorAll(".mark").forEach(function (m) { m.classList.add("in"); });
+      el.querySelectorAll("[data-count]").forEach(countUp);
+      // Hand the element back to its normal (snappy) hover transitions
+      setTimeout(function () { el.classList.remove("reveal", "in", "from-left", "from-right", "zoom"); }, 950);
+    }, delay);
+  }
+
+  var revealables = document.querySelectorAll(".reveal");
+  if (reduceMotion || !canObserve) {
+    revealables.forEach(function (el) { el.classList.add("in"); });
+    document.querySelectorAll(".mark").forEach(function (m) { m.classList.add("in"); });
   } else {
-    document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); });
+    var io = new IntersectionObserver(function (entries) {
+      var perParent = new Map();
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var parent = en.target.parentElement, i = perParent.get(parent) || 0;
+        perParent.set(parent, i + 1);
+        revealEl(en.target, Math.min(i, 6) * 90);
+        io.unobserve(en.target);
+      });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    revealables.forEach(function (el) { io.observe(el); });
   }
 })();
