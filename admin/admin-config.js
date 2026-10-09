@@ -5,5 +5,5 @@ window.ADMIN_CONFIG = {
   OWNER: "inkhavens",
   REPO: "westtech-crossfit",
   BRANCH: "main",
-  AUTH_URL: ""
+  AUTH_URL: "https://westtech-admin-auth.inkhavens.workers.dev"
 };

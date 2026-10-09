@@ -433,12 +433,13 @@ html { scrollbar-color: var(--pink) var(--ink); }
 
 /* Header shrinks and gains a shadow after scrolling */
 #site-header { transition: box-shadow .3s ease; }
-#site-header .nav { transition: padding .3s ease; }
-#site-header .brand img { transition: width .3s ease, transform .3s cubic-bezier(.34, 1.56, .64, 1); }
+/* The header never changes height (that made the page jump and the header flicker);
+   only the logo scales, which doesn't move anything else. */
+#site-header .brand img { transform-origin: left center; transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
 #site-header.scrolled { box-shadow: 0 6px 0 rgba(17, 17, 20, .08); }
-#site-header.scrolled .nav { padding: 2px 0; }
-#site-header.scrolled .brand img { width: 160px; }
+#site-header.scrolled .brand img { transform: scale(.84); }
 .brand:hover img { transform: rotate(-3deg) scale(1.05); }
+#site-header.scrolled .brand:hover img { transform: rotate(-3deg) scale(.88); }
 .nav-links a:not(.btn) { transition: background-color .2s ease, transform .2s ease; }
 .nav-links a:not(.btn):hover { transform: translateY(-2px); }
 
