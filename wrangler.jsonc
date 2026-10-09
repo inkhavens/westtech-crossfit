@@ -7,9 +7,10 @@
   "main": "admin/worker/worker.js",
   "compatibility_date": "2025-01-01",
   "workers_dev": true,
-  // Keep GITHUB_CLIENT_ID (and the secret) that are set in the Cloudflare dashboard.
+  // Keep anything else set in the Cloudflare dashboard. GITHUB_CLIENT_SECRET stays a dashboard Secret, never in this file.
   "keep_vars": true,
   "vars": {
-    "ALLOWED_RETURN": "https://inkhavens.github.io/westtech-crossfit/admin/"
+    "ALLOWED_RETURN": "https://inkhavens.github.io/westtech-crossfit/admin/",
+    "GITHUB_CLIENT_ID": "Ov23liBMhVh3qJ6CbtWU"
   }
 }
