@@ -1,0 +1,15 @@
+{
+  // Cloudflare Workers config for the Site Builder sign-in helper.
+  // The Cloudflare Worker "westtech-admin-auth" is connected to this repo, so every push
+  // rebuilds it. This file makes that build run admin/worker/worker.js (the sign-in code)
+  // instead of publishing the website files.
+  "name": "westtech-admin-auth",
+  "main": "admin/worker/worker.js",
+  "compatibility_date": "2025-01-01",
+  "workers_dev": true,
+  // Keep GITHUB_CLIENT_ID (and the secret) that are set in the Cloudflare dashboard.
+  "keep_vars": true,
+  "vars": {
+    "ALLOWED_RETURN": "https://inkhavens.github.io/westtech-crossfit/admin/"
+  }
+}
