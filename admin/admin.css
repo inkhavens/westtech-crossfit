@@ -90,10 +90,10 @@ code { background: var(--bg3); padding: 1px 6px; border-radius: 6px; font-size: 
 .hint { color: var(--dim); font-size: .88rem; margin: 0 0 12px; }
 
 .stage { grid-area: stage; overflow: auto; background: #0B0B10; background-image: radial-gradient(#1b1b24 1px, transparent 1px); background-size: 18px 18px; display: flex; justify-content: center; padding: 18px; min-width: 0; }
-.frame-wrap { width: 100%; height: 100%; max-width: 100%; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.5); transition: width .3s ease; }
-.frame-wrap.tablet { width: 834px; }
-.frame-wrap.phone { width: 390px; border-radius: 28px; border: 10px solid #222; }
-#frame { width: 100%; height: 100%; border: 0; display: block; background: #fff; }
+.frame-wrap { position: relative; flex: none; height: 100%; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+.frame-wrap.phone { border-radius: 26px; box-shadow: 0 0 0 10px #222, 0 20px 60px rgba(0,0,0,.5); }
+.frame-wrap[data-scale]::after { content: attr(data-scale); position: absolute; right: 8px; bottom: 8px; padding: 2px 8px; border-radius: 999px; background: rgba(15,15,20,.75); color: #fff; font: 700 .75rem/1.6 var(--cond); letter-spacing: .5px; pointer-events: none; }
+#frame { border: 0; display: block; background: #fff; transform-origin: 0 0; }
 
 .inspector { grid-area: insp; background: var(--bg2); border-left: 1px solid var(--line); overflow: auto; padding: 14px 14px 60px; }
 .insp-title { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font: 700 1.05rem/1.2 var(--cond); letter-spacing: 1px; text-transform: uppercase; }

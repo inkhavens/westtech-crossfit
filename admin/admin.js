@@ -205,7 +205,13 @@
   function serialize(doc, keepIds) {
     const el = doc.documentElement.cloneNode(true);
     if (!keepIds) { el.removeAttribute("data-cms-id"); el.querySelectorAll("[data-cms-id]").forEach((x) => x.removeAttribute("data-cms-id")); }
-    return "<!doctype html>\n" + el.outerHTML + "\n";
+    const s = "<!doctype html>\n" + el.outerHTML + "\n";
+    return keepIds ? s : tidy(s);
+  }
+  // Keep published files looking hand-written: newline before <head>, tidy ending, bare boolean attributes.
+  const BOOL_ATTRS = /\s(data-fallback|data-consent-open|novalidate|required|open|crossorigin|hidden|disabled|checked|selected|multiple|defer|async|autoplay|muted|loop|playsinline)=""/g;
+  function tidy(s) {
+    return s.replace(/^(<!doctype html>\n<html[^>]*>)<head>/, "$1\n<head>").replace(/\s*<\/body><\/html>\s*$/, "\n</body>\n</html>\n").replace(BOOL_ATTRS, " $1");
   }
   function assignIds(doc) { [doc.body, ...doc.body.querySelectorAll("*")].forEach((el) => el.setAttribute("data-cms-id", String(S.nextId++))); }
   function reId(el) { [el, ...el.querySelectorAll("*")].forEach((x) => x.setAttribute("data-cms-id", String(S.nextId++))); }
@@ -333,6 +339,20 @@
     f.srcdoc = buildRenderHTML(m, S.mode === "preview");
   }
   const rerenderSoon = debounce(() => render(), 350);
+
+  // Show the page at its real width (desktop 1280px, tablet 834px, phone 390px), scaled down to fit.
+  const DEVICE_W = { desktop: 1280, tablet: 834, phone: 390 };
+  function fitFrame() {
+    const stage = $("#stage"), wrap = $("#frame-wrap"), f = $("#frame"); if (!stage || !wrap || !f) return;
+    const w = DEVICE_W[S.device] || 1280;
+    const availW = Math.max(200, stage.clientWidth - 36), availH = Math.max(200, stage.clientHeight - 36);
+    const scale = Math.min(1, availW / w);
+    wrap.style.width = Math.floor(w * scale) + "px";
+    f.style.width = w + "px";
+    f.style.height = Math.ceil(availH / scale) + "px";
+    f.style.transform = scale < 1 ? `scale(${scale})` : "none";
+    if (scale < 0.995) wrap.dataset.scale = Math.round(scale * 100) + "%"; else delete wrap.dataset.scale;
+  }
 
   function flashEl(id) {
     const el = inFrame(id); if (!el) return;
@@ -1187,6 +1207,7 @@
     $$("#device-seg button").forEach((b) => { b.innerHTML = icon(dev[b.dataset.device]); b.addEventListener("click", () => {
       S.device = b.dataset.device; $$("#device-seg button").forEach((x) => x.classList.toggle("on", x === b));
       $("#frame-wrap").className = "frame-wrap " + (S.device === "desktop" ? "" : S.device);
+      fitFrame();
     }); });
     $("#undo-btn").innerHTML = icon("undo"); $("#redo-btn").innerHTML = icon("redo");
     $("#undo-btn").addEventListener("click", undo); $("#redo-btn").addEventListener("click", redo);
@@ -1221,6 +1242,8 @@
     setLoading("Loading the website…");
     try {
       bindChrome();
+      fitFrame();
+      if ("ResizeObserver" in window) new ResizeObserver(() => fitFrame()).observe($("#stage"));
       $("#user-btn").innerHTML = (S.user.avatar_url ? `<img src="${esc(S.user.avatar_url)}" alt="">` : "") + `<span>@${esc(S.user.login)}</span>`;
       if (DEV) $("#dev-flag").hidden = false;
       const t = await B().loadTree(); S.tree = t.files; S.head = t.head;
