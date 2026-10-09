@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Site Builder · West Tech CrossFit</title>
+  <link rel="icon" href="../assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <!-- Sign in -->
+  <div id="login" class="login hidden">
+    <div class="login-card">
+      <img src="../assets/img/logo.svg" alt="West Tech CrossFit" class="login-logo">
+      <h1>Site Builder</h1>
+      <p>Sign in with the GitHub account that's a collaborator on the website's repository.</p>
+      <div id="login-msg"></div>
+      <button id="signin" class="btn primary big" type="button">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg>
+        Sign in with GitHub
+      </button>
+      <a class="back-link" href="../">← Back to the website</a>
+    </div>
+  </div>
+
+  <!-- Builder -->
+  <div id="app" class="app hidden">
+    <header class="bar">
+      <div class="bar-left">
+        <img src="../assets/img/logo-mark.svg" alt="" class="bar-mark">
+        <div class="bar-title"><strong>Site Builder</strong><span id="page-label">Loading…</span></div>
+        <span id="dev-flag" class="pill warn" hidden>Local test mode</span>
+      </div>
+      <div class="bar-mid">
+        <div class="seg" id="device-seg" role="group" aria-label="Preview size">
+          <button data-device="desktop" class="on" title="Desktop" type="button"></button>
+          <button data-device="tablet" title="Tablet" type="button"></button>
+          <button data-device="phone" title="Phone" type="button"></button>
+        </div>
+        <div class="seg" role="group" aria-label="History">
+          <button id="undo-btn" title="Undo (Ctrl/Cmd+Z)" type="button"></button>
+          <button id="redo-btn" title="Redo (Ctrl/Cmd+Shift+Z)" type="button"></button>
+        </div>
+        <div class="seg" id="mode-seg" role="group" aria-label="Mode">
+          <button data-mode="edit" class="on" type="button"></button>
+          <button data-mode="preview" type="button"></button>
+        </div>
+      </div>
+      <div class="bar-right">
+        <a id="live-link" class="btn ghost" target="_blank" rel="noopener"></a>
+        <button id="publish-btn" class="btn publish" type="button"></button>
+        <div class="user" id="user-menu">
+          <button id="user-btn" class="user-btn" type="button" aria-haspopup="true"></button>
+          <div class="user-pop" id="user-pop" hidden>
+            <a id="repo-link" target="_blank" rel="noopener">Open the GitHub repo</a>
+            <button id="signout" type="button">Sign out</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="rail" id="rail" aria-label="Builder tools"></nav>
+    <aside class="panel" id="panel"></aside>
+
+    <main class="stage" id="stage">
+      <div class="frame-wrap" id="frame-wrap">
+        <iframe id="frame" title="Page editor"></iframe>
+      </div>
+    </main>
+
+    <aside class="inspector" id="inspector"></aside>
+  </div>
+
+  <div id="loading" class="loading hidden"><div class="spinner"></div><p id="loading-msg">Loading…</p></div>
+  <div id="modal-root"></div>
+  <div id="toasts" aria-live="polite"></div>
+  <input type="file" id="file-input" accept="image/*" multiple hidden>
+
+  <script src="admin-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,51 +1,32 @@
 # West Tech CrossFit website
 
-The website for **West Tech CrossFit**, the WCTA CrossFit Club at West Career & Technical Academy in Las Vegas.
-It's plain HTML, CSS and JavaScript, hosted free on GitHub Pages. There's no build step: edit a file, commit, and the site updates in about a minute.
+The website for **West Tech CrossFit**, the WCTA CrossFit Club at West Career & Technical Academy in Las Vegas. Providing Functional Fitness Since 2014.
+Plain HTML, CSS and JavaScript on GitHub Pages: **https://inkhavens.github.io/westtech-crossfit/**
+
+## Editing the site: the Site Builder
+Go to **https://inkhavens.github.io/westtech-crossfit/admin/** and sign in with GitHub (repo collaborators only).
+- Click any text to edit it, click any photo to swap it, and use "Add a section" for new blocks.
+- **Yellow placeholders** tab: every yellow dashed box that still needs real info.
+- **Settings** tab: menu, top bar, footer, contact email and sign-up links.
+- **Publish** commits your changes here. The live site updates in about a minute, then hard refresh (Cmd+Shift+R / Ctrl+F5).
+
+One-time sign-in setup: see `admin/SETUP.md`.
 
 ## Pages
+`index.html` (home), `about.html`, `coaches/` (+ a page per coach), `schedule.html`, `events.html`, `wod.html`, `join.html`, `contact.html`, `terms.html`, `privacy.html`.
+Links use clean addresses (`/about` instead of `/about.html`); GitHub Pages serves both.
 
-| File | Page |
-|---|---|
-| `index.html` | Home: hero, programs, photo gallery, coaches, events, Instagram |
-| `about.html` | Story, mission, facility, sponsors |
-| `coaches/index.html` | All coaches |
-| `coaches/eric-swenson.html`, `coaches/cresen-swenson.html`, `coaches/grayson-gearin.html` | Coach profiles (photo, about, certifications) |
-| `schedule.html` | Weekly schedule + map |
-| `events.html` | Teen Fitness Series, Fast Times, CrossFit Open, Masters |
-| `wod.html` | Workout of the day (SugarWOD) + benchmark workouts |
-| `join.html` | How to join + FAQ |
-| `contact.html` | Contact form + coach emails |
+## How it's built
+- `assets/css/style.css`: all styles and animations.
+- `assets/js/site.js`: shared header, footer, privacy banner, animations, gallery lightbox and contact form.
+- `assets/js/config.js`: site settings (edited from the builder's Settings tab). Must stay valid JSON.
+- `assets/fonts/`: self-hosted fonts (no Google requests).
+- `admin/`: the Site Builder. `admin/worker/worker.js` is the sign-in helper that runs on Cloudflare.
 
-The header and footer are shared by every page and live in `assets/js/site.js`. Change them there once.
-
-## Filling in the blanks
-
-Anything still unknown is highlighted on the site with a **yellow dashed box**. In the code, search for `class="tbd"` to find every one, replace the text, and delete the `<span class="tbd">` wrapper.
-
-## Site settings: `assets/js/config.js`
-
-- `CONTACT_EMAIL`: where the contact form sends messages.
-- `FORM_ENDPOINT`: optional. Paste a free [Formspree](https://formspree.io) endpoint so messages send without opening an email app.
-- `SUGARWOD_HTML_URL`: paste the SugarWOD HTML feed URL to show live workouts on the WOD page (see below).
-- `TEEN_SERIES_FORM` / `FAST_TIMES_SIGNUP`: registration links for the event buttons.
-
-## Connecting SugarWOD
-
-SugarWOD can publish workouts as an RSS feed or an HTML page ([SugarWOD's guide](https://www.sugarwod.com/2017/03/publish-your-workouts-anywhere/)).
-A coach with admin access to the West Tech CrossFit SugarWOD account creates an **HTML page** feed, copies the URL, and pastes it into `SUGARWOD_HTML_URL`. The WOD page then shows the live workouts automatically.
-
-## Photos
-
-- **Gallery:** put photos in `images/gallery/` and add a line to the gallery in `index.html`. Size classes: `big` (2×2), `tall` (1×2), `wide` (2×1), or none.
-- **Coaches:** save portraits as `images/coaches/eric-swenson.jpg`, `cresen-swenson.jpg` and `grayson-gearin.jpg` (about 800×1000). They replace the placeholder silhouettes automatically.
-- Keep photos under about 500 KB each. Only post photos of students who have permission to be on the site (CCSD rule).
-
-## Logo
-
-`assets/img/logo.svg` is the full logo and `assets/img/logo-mark.svg` is the round "WT" badge used as the browser tab icon.
+## Privacy banner
+Every visitor gets an Accept / Decline bar. Declining keeps outside services (Google Maps, the SugarWOD feed) switched off. Anything new that loads from another company should use `data-consent-embed` or check `window.siteHasConsent()`.
 
 ## Rules to keep
-
-- The footer disclaimer ("not endorsed by WCTA or CCSD") is required by CCSD Regulation 5132 for club websites. Don't remove it.
-- The CrossFit trademark notice in the footer should stay too.
+- The footer disclaimer ("not endorsed by WCTA or CCSD") is required by CCSD Regulation 5132 for club websites.
+- Keep the CrossFit trademark notice.
+- Only post photos of students who have permission to be on the site.
